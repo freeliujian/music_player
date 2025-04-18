@@ -1,35 +1,11 @@
 mod app;
 mod home_page;
 mod styles;
+mod router;
 
 use yew_router::prelude::*;
 use yew::prelude::*;
-use app::App;
-use home_page::home::HomePage;
-
-#[derive(Clone, Routable, PartialEq)]
-enum Route {
-    #[at("/")]
-    Home,
-    #[at("/login")]
-    Login,
-    #[at("/template")]
-    Template,
-}
-
-fn switch(routes: Route) -> Html {
-    match routes {
-        Route::Home => html! {
-            <HomePage/>
-        },
-        Route::Login => html! {
-            <h1>{"Login"}</h1>
-        },
-        Route::Template => html! {
-            <App/>
-        },
-    }
-}
+use crate::router::{switch, Route};
 
 #[function_component(Core)]
 fn core() -> Html {

@@ -5,18 +5,6 @@ pub fn styles() -> Style {
     let static_for_styles = styles_static();
 
     let css = css!(
-        .music-header {
-          height: ${static_for_styles.header_height};
-          width: 100%;
-          display: flex;
-          align-items: center;
-          padding: 0 20px;
-          background-color: rgba(0, 0, 0, 0.3);
-          backdrop-filter: blur(10px);
-          position: fixed;
-          top: 0;
-          z-index: 1000;
-        }
         .app-container {
           width: 100vw;
           height: 100vh;
