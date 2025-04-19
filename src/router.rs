@@ -11,6 +11,8 @@ pub enum Route {
     Login,
     #[at("/template")]
     Template,
+    #[at("/settings")]
+    Settings,
 }
 
 pub fn switch(routes: Route) -> Html {
@@ -24,5 +26,8 @@ pub fn switch(routes: Route) -> Html {
         Route::Template => html! {
             <App/>
         },
+        Route::Settings => html! {
+            <h1>{"Settings"}</h1>
+        }
     }
 }

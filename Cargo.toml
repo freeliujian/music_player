@@ -17,6 +17,7 @@ stylist = { version = "0.13.0", features = ["yew"] }
 yew-router = "0.18.0"
 log = "0.4.27"
 console_log = "1.0.0"
+classnames = "2.1.6"
 
 
 [workspace]

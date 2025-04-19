@@ -2,11 +2,14 @@ mod app;
 mod home_page;
 mod styles;
 mod router;
+pub mod icons;
+mod components;
 
+use log::Level;
 use yew_router::prelude::*;
 use yew::prelude::*;
 use crate::router::{switch, Route};
-use log::Level;
+
 
 
 #[function_component(Core)]

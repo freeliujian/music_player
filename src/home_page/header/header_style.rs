@@ -15,17 +15,23 @@ pub fn styles() -> Style {
           position: fixed;
           top: 0;
           z-index: 1000;
+            box-sizing: border-box;
 
         .header-left {
-          width: 240px;
+          width: 120px;
           display: flex;
           align-items: center;
           gap: 15px;
         }
         .nav-btn {
-          width: 20px;
-          height: 20px;
+          width: 26px;
+          height: 26px;
           cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
         }
         .log_img {
           height: 30px;
@@ -45,6 +51,7 @@ pub fn styles() -> Style {
           flex: 1;
           display: flex;
           justify-content: center;
+             gap: 5px;
         }
 
         .search-box {
@@ -60,18 +67,19 @@ pub fn styles() -> Style {
           width: 300px;
         }
 
-        .header-right {
-          width: 240px;
-          display: flex;
-          justify-content: flex-end;
-          align-items: center;
-          gap: 20px;
-        }
-
         .user-avatar {
           width: 30px;
           height: 30px;
           border-radius: 50%;
+            background-color: #bfbfbf;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .user-status {
+            font-size: 12px;
+            font-family: arial, sans-serif;
         }
     );
 

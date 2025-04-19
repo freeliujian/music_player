@@ -1,4 +1,3 @@
-use log::{info};
 use stylist::{Style, css};
 use crate::styles::{styles_static};
 
