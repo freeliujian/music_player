@@ -1,4 +1,3 @@
-use std::fmt::format;
 use yew::prelude::*;
 use stylist::yew::styled_component;
 use crate::home_page::header::header_style::styles;
@@ -13,6 +12,8 @@ pub fn header_component() -> Html {
     let handle_click =move |_| {
         router.push(&Home)
     };
+
+
 
     /* language=html */   html! {
         <div class={header_style}>
