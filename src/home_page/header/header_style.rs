@@ -81,6 +81,7 @@ pub fn styles() -> Style {
             font-size: 12px;
             font-family: arial, sans-serif;
         }
+
     );
 
     Style::new(css).unwrap_or_else(|e| {

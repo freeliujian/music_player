@@ -5,3 +5,6 @@ pub mod nav_struct;
 pub mod wrench_icon;
 pub mod setting_icon;
 pub mod mail;
+pub mod boder_icon;
+pub mod line_icon;
+pub mod close_icon;

@@ -1,6 +1,7 @@
 use yew::prelude::*;
 use yew::props;
 use yew_router::hooks::use_navigator;
+use crate::home_page::header::application_control_menu::application_control_menu::ApplicationControlMenu;
 use crate::home_page::header::right_config::styles::styles;
 use crate::icons::mail::MailIcon;
 use crate::router::Route::Settings;
@@ -22,12 +23,6 @@ pub fn right_config() -> Html {
             height:"20px",
             color: "#ffffff",
     });
-
-    let nav_icons_props =Some(props!(Props {
-         width: "16px",
-            height:"16px",
-            color: "#ffffff",
-    }));
     let set_and_theme_and_mail_icons_props =Some(props!(Props {
          width: "20px",
             height:"20px",
@@ -64,6 +59,8 @@ pub fn right_config() -> Html {
                     />
                 </div>
             </div>
+            <div class="divider"/>
+            <ApplicationControlMenu />
         </div>
     }
 }

@@ -2,7 +2,7 @@ use stylist::{Style,css};
 
 pub fn styles() -> Style {
     let css = css!(
-          width: 360px;
+          width: 270px;
           display: flex;
           align-items: center;
             justify-content: center;
@@ -14,6 +14,11 @@ pub fn styles() -> Style {
             display: flex;
             flex-direction: row;
             gap:15px;
+        }
+        .divider {
+            width: 1px;
+            height: 20px;
+            background-color: white;
         }
     );
 
