@@ -36,6 +36,7 @@ pub fn styles() -> Style {
             align-items: center;
             background-color: rgba(0, 0, 0, 0.3);
             border-radius: 50%;
+             -webkit-app-region: no-drag;
         }
         .log_img {
           height: 30px;
@@ -43,6 +44,7 @@ pub fn styles() -> Style {
             justify-content: center;
             align-items: center;
             cursor: pointer;
+             -webkit-app-region: no-drag;
         }
         .log_img > img {
             height: 100%;

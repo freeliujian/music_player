@@ -48,7 +48,6 @@ pub fn header_component() -> Html {
                 </div>
             </div>
             <RightConfig/>
-
         </div>
     }
 }

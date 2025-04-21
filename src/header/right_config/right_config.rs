@@ -1,7 +1,7 @@
 use yew::prelude::*;
 use yew::props;
 use yew_router::hooks::use_navigator;
-use crate::header::application_control_menu::application_control_menu::ApplicationControlMenu;
+use crate::header::right_config::application_control_menu::application_control_menu::ApplicationControlMenu;
 use crate::header::right_config::styles::styles;
 use crate::icons::mail::MailIcon;
 use crate::router::Route::Settings;
@@ -43,7 +43,7 @@ pub fn right_config() -> Html {
             <div class="config_wrapper">
                  <div class="header-theme">
                 <SetThemeIcon
-                        ..set_and_theme_and_mail_icons_props.clone().unwrap()
+                    ..set_and_theme_and_mail_icons_props.clone().unwrap()
                 />
                 </div>
                 <div

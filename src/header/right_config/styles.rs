@@ -2,6 +2,7 @@ use stylist::{Style,css};
 
 pub fn styles() -> Style {
     let css = css!(
+         -webkit-app-region: no-drag;
           width: 270px;
           display: flex;
           align-items: center;
