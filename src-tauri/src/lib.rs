@@ -1,7 +1,7 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 pub mod customs_handle;
 use tauri_plugin_log::{Target, TargetKind};
-use customs_handle::customs_handle::{close_window, greet};
+use customs_handle::customs_handle::{control_window, greet};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -9,7 +9,7 @@ pub fn run() {
     tauri::Builder::default()
         .invoke_handler(
             tauri::generate_handler![
-                close_window,
+                control_window,
                 greet
             ])
         .plugin(tauri_plugin_window_state::Builder::new().build())
