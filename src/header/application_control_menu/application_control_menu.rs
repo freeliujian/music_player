@@ -2,7 +2,7 @@ use serde::{ Serialize};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::spawn_local;
 use yew::prelude::*;
-use crate::home_page::header::application_control_menu::styles::styles;
+use crate::header::application_control_menu::styles::styles;
 use crate::icons::boder_icon::BorderIcon;
 use crate::icons::close_icon::CloseIcon;
 use crate::icons::line_icon::LineIcon;

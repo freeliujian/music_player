@@ -4,8 +4,8 @@ mod styles;
 mod router;
 pub mod icons;
 mod components;
+pub mod header;
 
-use log::Level;
 use yew_router::prelude::*;
 use yew::prelude::*;
 use crate::router::{switch, Route};

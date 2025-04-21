@@ -1,12 +1,17 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 pub mod customs_handle;
+use tauri::Manager;
 use tauri_plugin_log::{Target, TargetKind};
 use customs_handle::customs_handle::{control_window, greet};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-
     tauri::Builder::default()
+        .setup(|app| {
+            let window = app.get_webview_window("main").unwrap();
+            window.set_decorations(false)?;
+            Ok(())
+        })
         .invoke_handler(
             tauri::generate_handler![
                 control_window,

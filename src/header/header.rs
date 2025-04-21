@@ -1,13 +1,13 @@
 use yew::prelude::*;
 use yew::props;
-use crate::home_page::header::header_style::styles;
+use crate::header::header_style::styles;
 use yew_router::hooks::use_navigator;
 use crate::icons::right_icon::{ RightIcon};
 use crate::icons::left_icon::{ LeftIcon};
 use crate::router::Route::Home;
 use crate::icons::nav_struct::Props;
 
-use crate::home_page::header::right_config::right_config::RightConfig;
+use crate::header::right_config::right_config::RightConfig;
 
 #[function_component(Header)]
 pub fn header_component() -> Html {

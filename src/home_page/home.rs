@@ -1,7 +1,7 @@
 use yew::prelude::*;
 use stylist::yew::styled_component;
 use crate::home_page::home_style::styles;
-use crate::home_page::header::header::Header;
+use crate::header::header::Header;
 
 
 #[styled_component(HomePage)]
