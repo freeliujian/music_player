@@ -1,9 +1,9 @@
 use stylist::{Style,css};
+use crate::config_provide::context::Theme;
 use crate::styles::{styles_static};
 
-pub fn styles() -> Style {
+pub fn styles(theme: &Theme) -> Style {
     let static_for_styles = styles_static();
-
     let css = css!(
          -webkit-app-region: drag;
          position: fixed;
@@ -14,7 +14,7 @@ pub fn styles() -> Style {
           display: flex;
           align-items: center;
           padding: 0 20px;
-          background-color: rgba(0, 0, 0, 0.3);
+          background-color: ${theme.color_primary};
           backdrop-filter: blur(10px);
           position: fixed;
           top: 0;
@@ -51,7 +51,7 @@ pub fn styles() -> Style {
             margin-right: 10px;
         }
         .log_img > span {
-            color: white;
+            color: ${ theme.color_text_base };
         }
         .header-center {
           flex: 1;
@@ -61,18 +61,12 @@ pub fn styles() -> Style {
         }
 
         .search-box {
-          width: 160px;
-          height: 32px;
+          width: 200px;
           border-radius: 16px;
           padding: 0 15px;
           font-size: 14px;
           transition: width 0.3s;
         }
-
-        .search-box:focus {
-          width: 300px;
-        }
-
         .user-avatar {
           width: 30px;
           height: 30px;

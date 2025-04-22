@@ -2,16 +2,18 @@ use yew::prelude::*;
 use yew::props;
 use crate::header::header_style::styles;
 use yew_router::hooks::use_navigator;
-use crate::icons::right_icon::{ RightIcon};
-use crate::icons::left_icon::{ LeftIcon};
+use crate::icons::right_icon::{ RightIcon };
+use crate::icons::left_icon::{ LeftIcon };
 use crate::router::Route::Home;
 use crate::icons::nav_struct::Props;
-
 use crate::header::right_config::right_config::RightConfig;
+use crate::header::search::search::{SearchInput, SearchInputProps};
+use crate::config_provide::context::ThemeContextProvider;
 
 #[function_component(Header)]
 pub fn header_component() -> Html {
-    let header_style = styles();
+    let theme_context = use_context::<ThemeContextProvider>().expect("not get Theme context");
+    let header_style = styles(&*theme_context);
     let router = use_navigator().expect("Navigator not found");
     let handle_click =move |_| {
         router.push(&Home)
@@ -23,6 +25,10 @@ pub fn header_component() -> Html {
             color: "#ffffff",
     }));
 
+    let search_bar_props = Some(props!(SearchInputProps {
+        value: "".to_string(),
+    }));
+
     /* language=html*/  html! {
         <div class={header_style}>
             <div class="header-left">
@@ -31,7 +37,6 @@ pub fn header_component() -> Html {
                     <span>{"yyds"}</span>
                 </div>
             </div>
-
             <div class="header-center ">
                   <div class="nav-btn">
                     <LeftIcon
@@ -44,7 +49,9 @@ pub fn header_component() -> Html {
                     />
                 </div>
                 <div class="search-box">
-                    {111}
+                    <SearchInput
+                        ..search_bar_props.unwrap() 
+                    />
                 </div>
             </div>
             <RightConfig/>
