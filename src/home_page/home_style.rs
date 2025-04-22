@@ -31,6 +31,7 @@ pub fn styles() -> Style {
           width: 100%;
           position: fixed;
           bottom: 0;
+            background-color: #fff;
         }
     );
 

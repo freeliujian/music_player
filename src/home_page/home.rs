@@ -4,6 +4,21 @@ use yew_router::prelude::*;
 use crate::home_page::home_style::styles;
 use crate::home_page::sidebar::sidebar::Siderbar;
 use crate::router::{home_switch, SubForHomeRoute};
+use crate::components::music_player_component::music_player_component::MusicPlayerComponent;
+
+#[function_component(SubOtherPage)]
+pub fn sub_other_page() -> Html {
+    html! {
+        <Switch<SubForHomeRoute> render={home_switch} />
+    }
+}
+
+#[function_component(FoundMusicPage)]
+pub fn found_music_page() -> Html {
+    html! {
+        {"111"}
+    }
+}
 
 #[styled_component(HomePage)]
 pub fn home_page() -> Html {
@@ -13,10 +28,11 @@ pub fn home_page() -> Html {
             <div class="app-container">
                 <Siderbar/>
                 <div class="main-content">
-                    <Switch<SubForHomeRoute> render={home_switch} />
+                    <FoundMusicPage/>
+                    <SubOtherPage/>
                 </div>
                 <div class="player-bar">
-                    {"播放器"}
+                    <MusicPlayerComponent/>
                 </div>
             </div>
         </mian>
