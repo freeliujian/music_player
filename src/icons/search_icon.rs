@@ -4,7 +4,6 @@ use crate::icons::nav_struct::Props;
 
 #[function_component(SearchIcon)]
 pub fn search_icon(props: &Props) -> Html {
-    log::info!("search_icon_props: {:?}", &props);
     let class_name = props.class_name.clone();
     let width = props.width.clone();
     let height = props.height.clone();

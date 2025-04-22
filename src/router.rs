@@ -16,13 +16,13 @@ pub enum MainRoute {
     Template,
     #[at("/settings")]
     Settings,
+    
 }
 
 #[derive(Clone, Routable, PartialEq, Debug)]
 pub enum SubForHomeRoute {
     #[at("/home/foundMusic")]
     FoundMusic,
-    
     #[at("/home/creatorOrPlayer")]
     CreatorOrPlayer,
     #[at("/home/video")]
@@ -38,7 +38,7 @@ pub enum SubForHomeRoute {
 pub fn home_switch(routes: SubForHomeRoute) -> Html {
     match routes {
         SubForHomeRoute::FoundMusic => html! {
-          <h1>{"Music"}</h1>
+            <Redirect<MainRoute> to={MainRoute::HomeRoot}/>
         },
         SubForHomeRoute::CreatorOrPlayer => html! {
             <h1>{"creator or player"}</h1>
@@ -60,7 +60,9 @@ pub fn home_switch(routes: SubForHomeRoute) -> Html {
 
 pub fn switch(routes: MainRoute) -> Html {
     match routes {
-        MainRoute::HomeRoot | MainRoute::Home  => html! {
+        MainRoute::HomeRoot 
+        | MainRoute::Home  
+        => html! {
             <HomePage/>
         },
         MainRoute::Login => html! {

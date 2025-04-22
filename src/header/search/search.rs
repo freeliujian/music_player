@@ -27,7 +27,6 @@ pub fn search_input(props: &SearchInputProps) -> Html {
     // let value_for_click = Rc::clone(&value);
     let value_for_keypress = Rc::clone(&value);
 
-
     let memoized_callback = use_memo(
         props.on_search.clone(),
         |on_search| {

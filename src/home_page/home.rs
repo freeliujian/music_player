@@ -8,7 +8,7 @@ use crate::router::{home_switch, SubForHomeRoute};
 #[styled_component(HomePage)]
 pub fn home_page() -> Html {
     let home_style = styles();
-    /* language=html */   html! {
+    html! {
         <mian class={home_style}>
             <div class="app-container">
                 <Siderbar/>
