@@ -29,7 +29,7 @@ pub fn header_component() -> Html {
         value: "".to_string(),
     }));
 
-    /* language=html*/  html! {
+    html! {
         <div class={header_style}>
             <div class="header-left">
                 <div onclick={handle_click} class="log_img" >

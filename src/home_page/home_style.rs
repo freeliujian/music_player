@@ -2,8 +2,6 @@ use stylist::{Style, css};
 use crate::styles::{styles_static};
 
 
-
-
 pub fn styles() -> Style {
     let static_for_styles = styles_static();
     let css = css!(

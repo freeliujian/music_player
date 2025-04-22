@@ -1,8 +1,7 @@
 use yew::prelude::*;
 use stylist::yew::styled_component;
 use crate::home_page::home_style::styles;
-use crate::header::header::Header;
-
+use crate::home_page::sidebar::sidebar::Siderbar;
 
 #[styled_component(HomePage)]
 pub fn home_page() -> Html {
@@ -10,10 +9,7 @@ pub fn home_page() -> Html {
     /* language=html */   html! {
         <mian class={home_style}>
             <div class="app-container">
-                <Header/>
-                <div class="sidebar-left">
-                    {"侧边栏布局"}
-                </div>
+                <Siderbar/>
                 <div class="main-content">
                     {"首页主题布局"}
                 </div>

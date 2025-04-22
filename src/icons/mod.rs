@@ -9,3 +9,4 @@ pub mod boder_icon;
 pub mod line_icon;
 pub mod close_icon;
 pub mod block_icon;
+pub mod search_icon;

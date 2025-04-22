@@ -51,7 +51,7 @@ pub fn styles(theme: &Theme) -> Style {
             margin-right: 10px;
         }
         .log_img > span {
-            color: ${ theme.color_text_base };
+            color: ${ theme.color_bg_base };
         }
         .header-center {
           flex: 1;

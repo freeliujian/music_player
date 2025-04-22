@@ -1,6 +1,7 @@
 use yew::Properties;
 
 #[derive(PartialEq, Properties, Clone)]
+#[derive(Debug)]
 pub struct Props {
     #[prop_or_default]
     pub class_name: String,

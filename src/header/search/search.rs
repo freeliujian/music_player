@@ -2,6 +2,8 @@ use yew::prelude::*;
 use crate::header::search::styles::styles;
 use crate::components::input::input_base::{ InputBase, InputBaseProps };
 use std::rc::Rc;
+use crate::icons::nav_struct::Props;
+use crate::icons::search_icon::SearchIcon;
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct SearchInputProps {
@@ -47,6 +49,16 @@ pub fn search_input(props: &SearchInputProps) -> Html {
         }
     });
 
+    let search_icon_props = Props {
+        width:String::from("20px"),
+        height:String::from("20px"),
+        color:String::from("#fff"),
+        class_name:String::from(" ")
+    };
+  
+    let render_prefix = html!(
+        <SearchIcon ..search_icon_props.clone()/>
+    );
 
     html! {
         <div class={classes!("search-input", styles)}>
@@ -55,6 +67,7 @@ pub fn search_input(props: &SearchInputProps) -> Html {
                 placeholder={props.placeholder.clone()}
                 disabled={props.disabled}
                 on_change={on_change}
+                prefix ={render_prefix}
             />
         </div>
     }
