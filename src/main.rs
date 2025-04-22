@@ -1,7 +1,7 @@
 mod app;
 mod home_page;
 mod styles;
-mod router;
+pub mod router;
 pub mod icons;
 mod components;
 pub mod header;

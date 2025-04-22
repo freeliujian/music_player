@@ -4,7 +4,7 @@ use yew_router::hooks::use_navigator;
 use crate::header::right_config::application_control_menu::application_control_menu::ApplicationControlMenu;
 use crate::header::right_config::styles::styles;
 use crate::icons::mail::MailIcon;
-use crate::router::Route::Settings;
+use crate::router::MainRoute::Settings;
 use crate::icons::user_icon::{UserIcon, UserIconProps};
 use crate::icons::nav_struct::Props;
 use crate::icons::setting_icon::SettingIcon;

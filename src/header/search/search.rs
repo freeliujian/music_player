@@ -1,6 +1,6 @@
 use yew::prelude::*;
 use crate::header::search::styles::styles;
-use crate::components::input::input_base::{ InputBase, InputBaseProps };
+use crate::components::input::input_base::{ InputBase };
 use std::rc::Rc;
 use crate::icons::nav_struct::Props;
 use crate::icons::search_icon::SearchIcon;
@@ -24,7 +24,7 @@ pub fn search_input(props: &SearchInputProps) -> Html {
     let styles = styles();
     let value = Rc::new(props.value.clone());
 
-    let value_for_click = Rc::clone(&value);
+    // let value_for_click = Rc::clone(&value);
     let value_for_keypress = Rc::clone(&value);
 
 
@@ -34,7 +34,7 @@ pub fn search_input(props: &SearchInputProps) -> Html {
             on_search.clone()
         },
     );
-    let memoized_on_click = (*memoized_callback).clone();
+   //  let memoized_on_click = (*memoized_callback).clone();
     let memoized_on_keypress = (*memoized_callback).clone();
 
     let on_change = props.on_change.clone();
@@ -43,11 +43,11 @@ pub fn search_input(props: &SearchInputProps) -> Html {
     //     memoized_on_click.emit((*value_for_click).clone());
     // });
 
-    let on_key_press = Callback::from(move |e: KeyboardEvent| {
-        if e.key() == "Enter" {
-            memoized_on_keypress.emit((*value_for_keypress).clone());
-        }
-    });
+    // let on_key_press = Callback::from(move |e: KeyboardEvent| {
+    //     if e.key() == "Enter" {
+    //         memoized_on_keypress.emit((*value_for_keypress).clone());
+    //     }
+    // });
 
     let search_icon_props = Props {
         width:String::from("20px"),

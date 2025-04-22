@@ -1,12 +1,12 @@
 use yew::prelude::*;
-use crate::config_provide::context::{Theme, ThemeContextProvider};
+use crate::config_provide::context::{ThemeContextProvider};
 use crate::home_page::sidebar::styles::styles;
 use yew_router::prelude::*;
-use crate::router::Route;
+use crate::router::{ SubForHomeRoute };
 
 pub struct MenuListProps {
     pub label: String,
-    pub value: String,
+    pub value: SubForHomeRoute,
 }
 
 #[function_component(Siderbar)]
@@ -17,35 +17,35 @@ pub fn sider_bar() -> Html {
     let menu_list_main = vec![
         MenuListProps{
             label: String::from("发现音乐"),
-            value: String::from("foundMusic"),
+            value: SubForHomeRoute::FoundMusic,
         },
         MenuListProps{
             label: String::from("播客"),
-            value: String::from("creatorOrPlayer"),
+            value: SubForHomeRoute::CreatorOrPlayer,
         },
         MenuListProps{
             label: String::from("视频"),
-            value: String::from("video"),
+            value: SubForHomeRoute::HomeVideo,
         },
         MenuListProps{
             label: String::from("关注"),
-            value: String::from("focus"),
+            value: SubForHomeRoute::Focus,
         },
         MenuListProps{
             label: String::from("直播"),
-            value: String::from("stream"),
+            value: SubForHomeRoute::Stream,
         },
         MenuListProps{
             label: String::from("私人漫游"),
-            value: String::from("selfData"),
+            value: SubForHomeRoute::SelfData,
         },
     ];
     let style = styles(&*theme_context,&(current_selected.clone()));
 
     let on_change = {
-        Callback::from(move |value: String| {
-            log::info!("{}", value);
-            // location.push("")
+        Callback::from(move |value: SubForHomeRoute| {
+            log::info!("{:?}", value);
+            location.push(&value);
         })
     };
 

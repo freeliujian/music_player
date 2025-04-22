@@ -1,7 +1,9 @@
 use yew::prelude::*;
 use stylist::yew::styled_component;
+use yew_router::prelude::*;
 use crate::home_page::home_style::styles;
 use crate::home_page::sidebar::sidebar::Siderbar;
+use crate::router::{home_switch, SubForHomeRoute};
 
 #[styled_component(HomePage)]
 pub fn home_page() -> Html {
@@ -11,7 +13,7 @@ pub fn home_page() -> Html {
             <div class="app-container">
                 <Siderbar/>
                 <div class="main-content">
-                    {"首页主题布局"}
+                    <Switch<SubForHomeRoute> render={home_switch} />
                 </div>
                 <div class="player-bar">
                     {"播放器"}

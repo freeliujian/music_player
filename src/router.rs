@@ -1,14 +1,15 @@
 use yew::prelude::*;
 use yew_router::prelude::*;
-use crate::app::App;
+use crate::header::header::Header;
+// use crate::app::App;
 use crate::home_page::home::HomePage;
 
 #[derive(Clone, Routable, PartialEq, Debug)]
-pub enum Route {
+pub enum MainRoute {
     #[at("/")]
+    HomeRoot,
+    #[at("/home/*")]
     Home,
-    #[at("/home/foundMusic")]
-    HomeRedirect,
     #[at("/login")]
     Login,
     #[at("/template")]
@@ -18,14 +19,15 @@ pub enum Route {
 }
 
 #[derive(Clone, Routable, PartialEq, Debug)]
-pub enum subRouteForHomeRoute {
+pub enum SubForHomeRoute {
     #[at("/home/foundMusic")]
     FoundMusic,
+    
     #[at("/home/creatorOrPlayer")]
     CreatorOrPlayer,
     #[at("/home/video")]
     HomeVideo,
-    #[at("/home/focus")]    
+    #[at("/home/focus")]
     Focus,
     #[at("/home/stream")]
     Stream,
@@ -33,44 +35,41 @@ pub enum subRouteForHomeRoute {
     SelfData
 }
 
-pub fn home_switch(routes: subRouteForHomeRoute) -> Html {
+pub fn home_switch(routes: SubForHomeRoute) -> Html {
     match routes {
-        subRouteForHomeRoute::FoundMusic => html! {
-            <h1>{"found music"}</h1>
+        SubForHomeRoute::FoundMusic => html! {
+          <h1>{"Music"}</h1>
         },
-        subRouteForHomeRoute::CreatorOrPlayer => html! {
+        SubForHomeRoute::CreatorOrPlayer => html! {
             <h1>{"creator or player"}</h1>
         },
-        subRouteForHomeRoute::HomeVideo => html! {
+        SubForHomeRoute::HomeVideo => html! {
             <h1>{"home video"}</h1>
         },
-        subRouteForHomeRoute::Focus => html! {
+        SubForHomeRoute::Focus => html! {
             <h1>{"focus"}</h1>
         },
-        subRouteForHomeRoute::Stream => html! {
+        SubForHomeRoute::Stream => html! {
             <h1>{"stream"}</h1>
         },
-        subRouteForHomeRoute::SelfData => html! {
+        SubForHomeRoute::SelfData => html! {
             <h1>{"self"}</h1>
         }
     }
 }
 
-pub fn switch(routes: Route) -> Html {
+pub fn switch(routes: MainRoute) -> Html {
     match routes {
-        Route::Home => html! {
+        MainRoute::HomeRoot | MainRoute::Home  => html! {
             <HomePage/>
         },
-        Route::HomeRedirect => html! {
-            <Redirect<Route> to={Route::Home}/>
-        }
-        Route::Login => html! {
+        MainRoute::Login => html! {
             <h1>{"Login"}</h1>
         },
-        Route::Template => html! {
-            <App/>
+        MainRoute::Template => html! {
+            <h1>{"Template"}</h1>
         },
-        Route::Settings => html! {
+        MainRoute::Settings => html! {
             <h1>{"Settings"}</h1>
         }
     }
