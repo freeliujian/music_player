@@ -45,7 +45,7 @@ pub fn music_player_component(props: &Props) -> Html {
                         {"安河桥"}
                     </div>
                     <div class="music-player-play-author">
-                        {"罗健"}
+                        {"罗键"}
                     </div>
                 </div>
             </div>

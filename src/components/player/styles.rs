@@ -2,13 +2,11 @@ use stylist::{Style, css};
 
 pub fn styles() -> Style {
     let styles = css!(
-        .progress-bar-container {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            gap: 10px;
-            padding: 0 10px;
-        }
+        display: flex;
+        align-items: center;
+        width: 100%;
+        gap: 10px;
+        padding: 0 10px;
         
         .time-display {
             font-size: 12px;

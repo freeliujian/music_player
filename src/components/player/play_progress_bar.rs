@@ -49,7 +49,7 @@ pub fn progress_bar(props: &ProgressBarProps) -> Html {
 
 
     html! {
-        <div class="progress-bar-container">
+        <div class={classes}>
             <span class="time-display">{ format_time(*current_time) }</span>
             
             <div 
