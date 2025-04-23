@@ -10,3 +10,8 @@ pub mod line_icon;
 pub mod close_icon;
 pub mod block_icon;
 pub mod search_icon;
+pub mod retweet;
+pub mod backward_fast_icon;
+pub mod forward_fast_icon;
+pub mod pause_icon;
+pub mod play_icon;

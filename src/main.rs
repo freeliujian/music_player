@@ -7,7 +7,6 @@ pub mod components;
 pub mod header;
 mod config_provide;
 
-
 use yew::prelude::*;
 use log::Level;
 use app::App;
