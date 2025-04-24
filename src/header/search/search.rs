@@ -25,16 +25,16 @@ pub fn search_input(props: &SearchInputProps) -> Html {
     let value = Rc::new(props.value.clone());
 
     // let value_for_click = Rc::clone(&value);
-    let value_for_keypress = Rc::clone(&value);
+   // let value_for_keypress = Rc::clone(&value);
 
-    let memoized_callback = use_memo(
-        props.on_search.clone(),
-        |on_search| {
-            on_search.clone()
-        },
-    );
+    // let memoized_callback = use_memo(
+    //     props.on_search.clone(),
+    //     |on_search| {
+    //         on_search.clone()
+    //     },
+    // );
    //  let memoized_on_click = (*memoized_callback).clone();
-    let memoized_on_keypress = (*memoized_callback).clone();
+   // let memoized_on_keypress = (*memoized_callback).clone();
 
     let on_change = props.on_change.clone();
 

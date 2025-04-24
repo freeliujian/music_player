@@ -15,7 +15,7 @@ pub fn header_component() -> Html {
     let theme_context = use_context::<ThemeContextProvider>().expect("not get Theme context");
     let header_style = styles(&*theme_context);
     let location = use_navigator().expect("Navigator not found");
-    let effect_location = location.clone();
+    // let effect_location = location.clone();
     let handle_click =move |_| {
         location.push(&FoundMusic);
     };

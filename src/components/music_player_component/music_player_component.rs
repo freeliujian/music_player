@@ -69,7 +69,7 @@ pub fn music_player_component(props: &Props) -> Html {
                 </div>
                 <div class="music-player-play-main">
                     <ProgressBar
-                        current_time={11}
+                        current_time={1}
                         duration={11}
                         on_seek={|_| ()}
                     />
