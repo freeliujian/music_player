@@ -26,6 +26,18 @@ pub fn music_player_component(props: &Props) -> Html {
         on_mouse_over_show_shadow.set(true);
     });
 
+    // let is_playing = use_state(|| false);
+    let current_time = use_state(|| 0);
+    let duration = use_state(|| 213);
+
+    let on_seek = {
+        let current_time = current_time.clone();
+        Callback::from(move |new_time: u64| {
+            current_time.set(new_time);
+            log::info!("跳转到: {}秒", new_time);
+        })
+    };
+
     html! {
         <div
         class={classes!(classes ,props.class_name.clone())}
@@ -69,9 +81,9 @@ pub fn music_player_component(props: &Props) -> Html {
                 </div>
                 <div class="music-player-play-main">
                     <ProgressBar
-                        current_time={1}
-                        duration={11}
-                        on_seek={|_| ()}
+                        current_time={*current_time}
+                        duration={*duration}
+                        on_seek={on_seek}
                     />
                 </div>
             </div>

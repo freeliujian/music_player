@@ -1,7 +1,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use yew::prelude::*;
-use web_sys::{MouseEvent,HtmlElement};
+use web_sys::{MouseEvent};
 use gloo::utils::{document, window};
 use crate::components::player::styles::styles;
 use wasm_bindgen::closure::Closure;
@@ -57,7 +57,7 @@ pub fn progress_bar(props: &ProgressBarProps) -> Html {
         let on_seek = on_seek.clone();
 
         Callback::from(move |e: MouseEvent| {
-
+            // 是否开启拖动
             if *is_dragging {
                 if let Some(container) = progress_container.cast::<web_sys::Element>() {
                     let rect = container.get_bounding_client_rect();
@@ -83,32 +83,33 @@ pub fn progress_bar(props: &ProgressBarProps) -> Html {
     use_effect_with(
         (*is_dragging, on_mouse_move.clone(), on_mouse_up.clone()),
         move |(is_dragging, on_mouse_move, on_mouse_up)| {
-            // 使用 RefCell 来存储 Closure，这样我们可以在清理时访问它们
-            let closures = Rc::new(RefCell::new(Vec::<Closure<dyn FnMut(_)>>::new()));
+            // 创建一个多重所有权得闭包
+            let closures = Rc::new(RefCell::new(Vec::<Closure<dyn FnMut(MouseEvent)>>::new()));
             let blur_closures = Rc::new(RefCell::new(Vec::<Closure<dyn FnMut()>>::new()));
 
+            let move_emit = on_mouse_move.clone();
+            let up_emit = on_mouse_up.clone();
+            let blur_emit = on_mouse_up.clone();
             if *is_dragging {
-                // 创建闭包
-                let move_handler = Box::new(move |e: MouseEvent| {
-                    on_mouse_move.emit(e);
-                }) as Box<dyn FnMut(MouseEvent)>;
 
-                let up_handler = Box::new(move |e: MouseEvent| {
-                    on_mouse_up.emit(e);
-                }) as Box<dyn FnMut(MouseEvent)>;
+                log::info!("on_dragging");
 
-                let blur_handler = Box::new(move || {
+                let move_closure = Closure::<dyn FnMut(_)>::new(move |e: MouseEvent| {
+                    log::info!("on_mouse_move");
+                    move_emit.emit(e);
+                });
+                let up_closure = Closure::<dyn FnMut(_)>::new(move |e: MouseEvent| {
+                    log::info!("on_mouse_up");
+                    up_emit.emit(e);
+                });
+
+                let blur_closure = Closure::<dyn FnMut()>::new(move || {
                     if let Ok(e) = MouseEvent::new("blur") {
-                        on_mouse_up.emit(e);
+                        log::info!("blur");
+                        blur_emit.emit(e);
                     }
-                }) as Box<dyn FnMut()>;
+                });
 
-                // 包装闭包并存储
-                let move_closure = Closure::wrap(move_handler);
-                let up_closure = Closure::wrap(up_handler);
-                let blur_closure = Closure::wrap(blur_handler);
-
-                // 添加事件监听器
                 document()
                     .add_event_listener_with_callback("mousemove", move_closure.as_ref().unchecked_ref())
                     .expect("Failed to add mousemove listener");
@@ -119,18 +120,16 @@ pub fn progress_bar(props: &ProgressBarProps) -> Html {
                     .add_event_listener_with_callback("blur", blur_closure.as_ref().unchecked_ref())
                     .expect("Failed to add blur listener");
 
-                // 存储 Closure 以保证它们活得足够长
                 closures.borrow_mut().push(move_closure);
                 closures.borrow_mut().push(up_closure);
                 blur_closures.borrow_mut().push(blur_closure);
+
             }
 
-            // 清理函数
             move || {
                 let closures = closures.borrow();
                 let blur_closures = blur_closures.borrow();
 
-                // 移除事件监听器
                 for closure in closures.iter() {
                     document()
                         .remove_event_listener_with_callback("mousemove", closure.as_ref().unchecked_ref())

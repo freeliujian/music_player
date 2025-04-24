@@ -18,8 +18,12 @@ pub fn styles() -> Style {
         .progress-bar-wrapper {
             position: relative;
             flex-grow: 1;
-            height: 4px;
+            height: 2px;
             cursor: pointer;
+        }
+        
+        .progress-bar-wrapper:hover {
+            height: 4px;
         }
         
         .progress-bar-bg {
@@ -31,6 +35,11 @@ pub fn styles() -> Style {
             background-color: #e0e0e0;
             border-radius: 2px;
             overflow: hidden;
+            animaiton: all 0.5s;
+        }
+
+        .progress-bar-bg:hover {
+            overflow: visible;
         }
         
         .progress-bar-progress {
@@ -49,8 +58,8 @@ pub fn styles() -> Style {
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background-color: #c70c0c;
-            opacity: 0;
+            background-color: #1677ff;
+            opacity: 1;
             transition: opacity 0.2s;
         }
         
