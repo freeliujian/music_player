@@ -1,6 +1,5 @@
 use yew::prelude::*;
 use yew_router::prelude::*;
-use crate::header::header::Header;
 // use crate::app::App;
 use crate::home_page::home::HomePage;
 

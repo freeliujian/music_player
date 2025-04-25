@@ -83,7 +83,6 @@ pub fn progress_bar(props: &ProgressBarProps) -> Html {
     use_effect_with(
         (*is_dragging, on_mouse_move.clone(), on_mouse_up.clone()),
         move |(is_dragging, on_mouse_move, on_mouse_up)| {
-            // 创建一个多重所有权得闭包
             let closures = Rc::new(RefCell::new(Vec::<Closure<dyn FnMut(MouseEvent)>>::new()));
             let blur_closures = Rc::new(RefCell::new(Vec::<Closure<dyn FnMut()>>::new()));
 

@@ -78,6 +78,18 @@ pub fn styles(theme: &Theme) -> Style {
         .progress-wrapper {
             
         }
+        .pause_play_content{
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.1);
+        }
+        .pause_play_content:hover {
+            background: rgba(0,0,0,0.2);
+        }
     );
 
     Style::new(styles).unwrap_or_else(|e| {
