@@ -111,7 +111,7 @@ pub fn styles(theme: &Theme) -> Style {
             cursor: default;
         }
         .music-list-title {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 600;
         }
         .music-list-subtitle {
@@ -127,6 +127,19 @@ pub fn styles(theme: &Theme) -> Style {
             display:inline-block;
             font-size: 12px;
             color: #d9d9d9;
+        }
+        .music-list-action {
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+            padding: 0px 15px;
+        }
+        .save-all {
+            cursor: pointer;
+        }
+        .clear-list {
+            color: ${theme.color_info};
+            cursor: pointer;
         }
     );
 

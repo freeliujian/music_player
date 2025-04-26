@@ -1,19 +1,18 @@
-use stylist::yew::styled_component;
-use wasm_bindgen::prelude::Closure;
-use wasm_bindgen::JsCast;
-use yew::prelude::*;
 use crate::components::music_player_component::styles::styles;
 use crate::components::player::play_progress_bar::ProgressBar;
 use crate::config_provide::context::ThemeContextProvider;
 use crate::icons::backward_fast_icon::BackwardIcon;
-use crate::icons::forward_fast_icon::{ ForwardIcon };
-use crate::icons::pause_icon::PauseIcon;
-use crate::icons::retweet::RetweetIcon;
-use crate::icons::play_icon::PlayIcon;
 use crate::icons::folder_open_icon::FolderOpenIcon;
-use web_sys::HtmlMediaElement;
+use crate::icons::forward_fast_icon::ForwardIcon;
+use crate::icons::pause_icon::PauseIcon;
+use crate::icons::play_icon::PlayIcon;
+use crate::icons::retweet::RetweetIcon;
+use stylist::yew::styled_component;
+use wasm_bindgen::prelude::Closure;
+use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::{spawn_local, JsFuture};
-
+use web_sys::HtmlMediaElement;
+use yew::prelude::*;
 
 #[derive(PartialEq, Properties)]
 pub struct Props {
@@ -28,8 +27,7 @@ struct MusicListStruct {
     time: u64,
 }
 
-const CURRENTPLAYTITLE:&str ="当前播放";
-
+const CURRENTPLAYTITLE: &str = "当前播放";
 
 #[styled_component(MusicPlayerComponent)]
 pub fn music_player_component(props: &Props) -> Html {
@@ -42,24 +40,24 @@ pub fn music_player_component(props: &Props) -> Html {
     let audio_ref = use_node_ref();
 
     let is_playing = use_state(|| false);
-    let current_time= use_state(|| 0);
+    let current_time = use_state(|| 0);
     let duration = use_state(|| 0);
 
     let on_mouse_out_show_shadow = show_shadow.clone();
     let on_mouse_over_show_shadow = show_shadow.clone();
-    let on_mouse_out = Callback::from(move |_:MouseEvent| on_mouse_out_show_shadow.set(false));
-    let on_mouse_over = Callback::from(move |_:MouseEvent| {
+    let on_mouse_out = Callback::from(move |_: MouseEvent| on_mouse_out_show_shadow.set(false));
+    let on_mouse_over = Callback::from(move |_: MouseEvent| {
         on_mouse_over_show_shadow.set(true);
     });
 
-    let music_list = use_state(|| vec![
-        MusicListStruct {
+    let music_list = use_state(|| {
+        vec![MusicListStruct {
             name: String::from("安河桥"),
             author: String::from("luojian"),
             is_share: false,
             time: 5000,
-        }
-    ]);
+        }]
+    });
 
     let music_num = 1;
 
@@ -68,13 +66,19 @@ pub fn music_player_component(props: &Props) -> Html {
         let audio_ref_node = audio_ref.clone();
         Callback::from(move |new_time: u64| {
             let audio_ref_node = audio_ref_node.clone();
-            spawn_local(seek_and_play(new_time, audio_ref_node.clone(), current_time.clone()));
+            spawn_local(seek_and_play(
+                new_time,
+                audio_ref_node.clone(),
+                current_time.clone(),
+            ));
         })
     };
 
-  
-
-    async fn seek_and_play(new_time: u64, audio_ref_node: NodeRef, current_time: UseStateHandle<u64>) {
+    async fn seek_and_play(
+        new_time: u64,
+        audio_ref_node: NodeRef,
+        current_time: UseStateHandle<u64>,
+    ) {
         if let Some(audio) = audio_ref_node.cast::<HtmlMediaElement>() {
             audio.set_current_time(new_time as f64);
             current_time.set(new_time);
@@ -90,24 +94,22 @@ pub fn music_player_component(props: &Props) -> Html {
         }
     }
 
-    let on_click_play_or_pause: Callback<MouseEvent> =  {
+    let on_click_play_or_pause: Callback<MouseEvent> = {
         let switch_pause_play_click = switch_pause_play.clone();
         let audio_ref_node = audio_ref.clone();
-        
+
         if !*switch_pause_play_click {
-            Callback::from(move |_:MouseEvent| {
+            Callback::from(move |_: MouseEvent| {
                 let switch_pause_play_click = switch_pause_play_click.clone();
                 let audio_ref_node = audio_ref_node.clone();
-                if *switch_pause_play_click {
-    
-                }
+                if *switch_pause_play_click {}
                 spawn_local(async move {
                     if let Some(audio) = audio_ref_node.cast::<HtmlMediaElement>() {
                         match audio.play() {
                             Ok(promise) => {
                                 if let Err(e) = JsFuture::from(promise).await {
                                     log::error!("{:?}", &e);
-                                    return
+                                    return;
                                 }
                                 switch_pause_play_click.set(!*switch_pause_play_click);
                             }
@@ -118,8 +120,8 @@ pub fn music_player_component(props: &Props) -> Html {
                     }
                 });
             })
-        }else {
-            Callback::from(move |_:MouseEvent| {
+        } else {
+            Callback::from(move |_: MouseEvent| {
                 let switch_pause_play_click = switch_pause_play_click.clone();
                 let audio_ref_node = audio_ref_node.clone();
                 spawn_local(async move {
@@ -138,14 +140,11 @@ pub fn music_player_component(props: &Props) -> Html {
         }
     };
 
-
     {
-       
         let audio_ref_node = audio_ref.clone();
         let current_time = current_time.clone();
         let duration = duration.clone();
         use_effect_with(audio_ref_node, move |audio_ref_node: &NodeRef| {
-
             if let Some(audio) = audio_ref_node.cast::<HtmlMediaElement>() {
                 let duration_setter = duration.clone();
                 let current_time_setter = current_time.clone();
@@ -157,9 +156,12 @@ pub fn music_player_component(props: &Props) -> Html {
                     duration_setter.set(dur as u64);
                     log::info!("Audio duration loaded: {}", dur);
                 }) as Box<dyn FnMut()>);
-                audio.add_event_listener_with_callback("loadedmetadata", 
-                    loaded_metadata_cb.as_ref().unchecked_ref()
-                ).unwrap();
+                audio
+                    .add_event_listener_with_callback(
+                        "loadedmetadata",
+                        loaded_metadata_cb.as_ref().unchecked_ref(),
+                    )
+                    .unwrap();
 
                 let time_updated_cb = Closure::wrap(Box::new(move || {
                     let curr_time = time_updated_audio.current_time();
@@ -169,20 +171,23 @@ pub fn music_player_component(props: &Props) -> Html {
 
                 let is_play_cb = Closure::wrap(Box::new(move || {
                     is_play_audio.set(true);
-                })as Box<dyn FnMut()>) ;
+                }) as Box<dyn FnMut()>);
 
-                audio.add_event_listener_with_callback("play", is_play_cb.as_ref().unchecked_ref()).expect("play status is error");
+                audio
+                    .add_event_listener_with_callback("play", is_play_cb.as_ref().unchecked_ref())
+                    .expect("play status is error");
 
-                audio.add_event_listener_with_callback(
-                    "timeupdate", 
-                    time_updated_cb.as_ref().unchecked_ref()
-                ).expect("timeupdate status is error");
+                audio
+                    .add_event_listener_with_callback(
+                        "timeupdate",
+                        time_updated_cb.as_ref().unchecked_ref(),
+                    )
+                    .expect("timeupdate status is error");
 
                 // audio.add_event_listener_with_callback("play", listener)
 
                 loaded_metadata_cb.forget();
                 time_updated_cb.forget();
-               
             }
         });
     }
@@ -232,26 +237,42 @@ pub fn music_player_component(props: &Props) -> Html {
         })
     };
 
-    let show_music_list_render = {
+    let show_music_list_title_render = {
         html! {
-            <div class="music-list-wrapper">
+            <>
                 <div class="music-list-title">
-                    {CURRENTPLAYTITLE}
+                {CURRENTPLAYTITLE}
                 </div>
                 <div class="music-list-subtitle">
                     <span class="total-number">
                         {format!("总{}首", music_num)}
                     </span>
-                    <div>
-                        <span>
+                    <div class="music-list-action">
+                        <span class="save-all">
                         {"收藏全部"}
                         </span>
-                        <span>
+                        <span class="clear-list">
                             {"清空列表"}
                         </span>
                     </div>
-                  
                 </div>
+            </>
+        }
+    };
+
+    let show_music_list_content_render = {
+        html! {
+            <div class="music-list-content">
+
+            </div>
+        }
+    };
+
+    let show_music_list_render = {
+        html! {
+            <div class="music-list-wrapper">
+                {show_music_list_title_render}
+                {show_music_list_content_render}
             </div>
         }
     };
@@ -259,7 +280,7 @@ pub fn music_player_component(props: &Props) -> Html {
     html! {
         <div
         class={classes!(classes ,props.class_name.clone())}
-        >   
+        >
             {play_main_render}
             <div
                 class="music_player_wrapper_left"
@@ -289,8 +310,8 @@ pub fn music_player_component(props: &Props) -> Html {
                     <div class={classes!("previous","music_player_btn")}>
                         <BackwardIcon/>
                     </div>
-                    <div 
-                        class={classes!("play_or_pause","music_player_btn")} 
+                    <div
+                        class={classes!("play_or_pause","music_player_btn")}
                         onclick={on_click_play_or_pause}
                     >
                         {play_or_pause_render}
