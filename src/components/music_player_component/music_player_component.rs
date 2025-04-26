@@ -10,6 +10,7 @@ use crate::icons::forward_fast_icon::{ ForwardIcon };
 use crate::icons::pause_icon::PauseIcon;
 use crate::icons::retweet::RetweetIcon;
 use crate::icons::play_icon::PlayIcon;
+use crate::icons::folder_open_icon::FolderOpenIcon;
 use web_sys::HtmlMediaElement;
 use wasm_bindgen_futures::{spawn_local, JsFuture};
 
@@ -20,31 +21,74 @@ pub struct Props {
     pub class_name: String,
 }
 
+struct MusicListStruct {
+    name: String,
+    author: String,
+    is_share: bool,
+    time: u64,
+}
+
+const CURRENTPLAYTITLE:&str ="当前播放";
+
+
 #[styled_component(MusicPlayerComponent)]
 pub fn music_player_component(props: &Props) -> Html {
     let theme = use_context::<ThemeContextProvider>().expect("Theme context not available");
     let classes = styles(&*theme);
     let show_shadow = use_state(|| false);
-    let on_mouse_out_show_shadow = show_shadow.clone();
-    let on_mouse_out = Callback::from(move |_:MouseEvent| on_mouse_out_show_shadow.set(false));
-    let on_mouse_over_show_shadow = show_shadow.clone();
-    let on_mouse_over = Callback::from(move |_:MouseEvent| {
-        on_mouse_over_show_shadow.set(true);
-    });
     let switch_pause_play = use_state(|| false);
+    let show_list = use_state(|| true);
+
     let audio_ref = use_node_ref();
 
-    // let is_playing = use_state(|| false);
+    let is_playing = use_state(|| false);
     let current_time= use_state(|| 0);
     let duration = use_state(|| 0);
 
+    let on_mouse_out_show_shadow = show_shadow.clone();
+    let on_mouse_over_show_shadow = show_shadow.clone();
+    let on_mouse_out = Callback::from(move |_:MouseEvent| on_mouse_out_show_shadow.set(false));
+    let on_mouse_over = Callback::from(move |_:MouseEvent| {
+        on_mouse_over_show_shadow.set(true);
+    });
+
+    let music_list = use_state(|| vec![
+        MusicListStruct {
+            name: String::from("安河桥"),
+            author: String::from("luojian"),
+            is_share: false,
+            time: 5000,
+        }
+    ]);
+
+    let music_num = 1;
+
     let on_seek = {
         let current_time = current_time.clone();
+        let audio_ref_node = audio_ref.clone();
         Callback::from(move |new_time: u64| {
-            current_time.set(new_time);
-            log::info!("跳转到: {}秒", new_time);
+            let audio_ref_node = audio_ref_node.clone();
+            spawn_local(seek_and_play(new_time, audio_ref_node.clone(), current_time.clone()));
         })
     };
+
+  
+
+    async fn seek_and_play(new_time: u64, audio_ref_node: NodeRef, current_time: UseStateHandle<u64>) {
+        if let Some(audio) = audio_ref_node.cast::<HtmlMediaElement>() {
+            audio.set_current_time(new_time as f64);
+            current_time.set(new_time);
+            match audio.play() {
+                Ok(promise) => {
+                    if let Err(e) = JsFuture::from(promise).await {
+                        log::error!("{:?}", &e);
+                    }
+                }
+                Err(e) => log::error!("{:?}", &e),
+            }
+            log::info!("跳转到: {}秒", new_time);
+        }
+    }
 
     let on_click_play_or_pause: Callback<MouseEvent> =  {
         let switch_pause_play_click = switch_pause_play.clone();
@@ -78,9 +122,6 @@ pub fn music_player_component(props: &Props) -> Html {
             Callback::from(move |_:MouseEvent| {
                 let switch_pause_play_click = switch_pause_play_click.clone();
                 let audio_ref_node = audio_ref_node.clone();
-                if *switch_pause_play_click {
-    
-                }
                 spawn_local(async move {
                     if let Some(audio) = audio_ref_node.cast::<HtmlMediaElement>() {
                         match audio.pause() {
@@ -98,8 +139,8 @@ pub fn music_player_component(props: &Props) -> Html {
     };
 
 
-
     {
+       
         let audio_ref_node = audio_ref.clone();
         let current_time = current_time.clone();
         let duration = duration.clone();
@@ -110,6 +151,7 @@ pub fn music_player_component(props: &Props) -> Html {
                 let current_time_setter = current_time.clone();
                 let loaded_metadata_audio = audio.clone();
                 let time_updated_audio = audio.clone();
+                let is_play_audio = is_playing.clone();
                 let loaded_metadata_cb = Closure::wrap(Box::new(move || {
                     let dur = loaded_metadata_audio.duration();
                     duration_setter.set(dur as u64);
@@ -125,10 +167,18 @@ pub fn music_player_component(props: &Props) -> Html {
                     log::info!("Current time: {}", curr_time);
                 }) as Box<dyn FnMut()>);
 
+                let is_play_cb = Closure::wrap(Box::new(move || {
+                    is_play_audio.set(true);
+                })as Box<dyn FnMut()>) ;
+
+                audio.add_event_listener_with_callback("play", is_play_cb.as_ref().unchecked_ref()).expect("play status is error");
+
                 audio.add_event_listener_with_callback(
                     "timeupdate", 
                     time_updated_cb.as_ref().unchecked_ref()
-                ).unwrap();
+                ).expect("timeupdate status is error");
+
+                // audio.add_event_listener_with_callback("play", listener)
 
                 loaded_metadata_cb.forget();
                 time_updated_cb.forget();
@@ -137,10 +187,22 @@ pub fn music_player_component(props: &Props) -> Html {
         });
     }
 
+    let on_end_ed = {
+        let audio_ref_node = audio_ref.clone();
+        let audio_current_time = current_time.clone();
+        let show_play = switch_pause_play.clone();
+        Callback::from(move |_| {
+            if let Some(audio) = audio_ref_node.cast::<HtmlMediaElement>() {
+                audio.set_current_time(0.0);
+                audio_current_time.set(0);
+                show_play.set(false);
+            }
+        })
+    };
 
     let play_main_render = {
         html! {
-            <audio ref={audio_ref} id="myAudio" src="public/55 Alstroemeria Records - Bad Apple!! feat. nomico.flac"></audio>
+            <audio ref={audio_ref} id="myAudio" src="public/55 Alstroemeria Records - Bad Apple!! feat. nomico.flac" onended={on_end_ed}></audio>
         }
     };
 
@@ -162,6 +224,37 @@ pub fn music_player_component(props: &Props) -> Html {
         }
     };
 
+    let handle_click_show_list = {
+        let show_list = show_list.clone();
+        Callback::from(move |_| {
+            log::info!("{:?}", *show_list);
+            show_list.set(!*show_list);
+        })
+    };
+
+    let show_music_list_render = {
+        html! {
+            <div class="music-list-wrapper">
+                <div class="music-list-title">
+                    {CURRENTPLAYTITLE}
+                </div>
+                <div class="music-list-subtitle">
+                    <span class="total-number">
+                        {format!("总{}首", music_num)}
+                    </span>
+                    <div>
+                        <span>
+                        {"收藏全部"}
+                        </span>
+                        <span>
+                            {"清空列表"}
+                        </span>
+                    </div>
+                  
+                </div>
+            </div>
+        }
+    };
 
     html! {
         <div
@@ -218,8 +311,19 @@ pub fn music_player_component(props: &Props) -> Html {
                 </div>
             </div>
             <div class="music-player-other">
-
+                <span class="open-icon"  onclick={handle_click_show_list}>
+                    <FolderOpenIcon/>
+                </span>
             </div>
+            {
+                if *show_list {
+                    show_music_list_render
+                }else {
+                    html! {
+                        <>{" "}</>
+                    }
+                }
+            }
         </div>
     }
 }

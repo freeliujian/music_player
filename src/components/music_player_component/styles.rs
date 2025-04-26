@@ -2,6 +2,7 @@ use stylist::{Style, css};
 use crate::config_provide::context::Theme;
 
 pub fn styles(theme: &Theme) -> Style {
+
     let styles = css!(
         height: auto;
         border-top: 1px solid #d9d9d9;
@@ -65,6 +66,13 @@ pub fn styles(theme: &Theme) -> Style {
         }
         .music-player-other {
             width: 240px;
+            display: flex;
+            justify-content:center;
+            align-items: center;
+        }
+        .open-icon {
+            display:inline-block;
+            cursor: pointer;
         }
         .music-player-play-main{
             flex: 1  auto;
@@ -89,6 +97,36 @@ pub fn styles(theme: &Theme) -> Style {
         }
         .pause_play_content:hover {
             background: rgba(0,0,0,0.2);
+        }
+        .music-list-wrapper {
+            height : 499px;
+            width: 300px;
+            position: fixed;
+            top:60px;
+            right: 0px;
+            background: ${theme.color_bg_base};
+            box-shadow: 0px 6px 16px 0px rgba(0, 0, 0, 0.08);
+            padding: 24px 0px 24px 16px;
+            box-sizing: border-box;
+            cursor: default;
+        }
+        .music-list-title {
+            font-size: 22px;
+            font-weight: 600;
+        }
+        .music-list-subtitle {
+            width:100%
+            height:24px;
+            border-bottom: solid 1px #f0f0f0;
+            margin-top: 12px;
+            padding-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .total-number{ 
+            display:inline-block;
+            font-size: 12px;
+            color: #d9d9d9;
         }
     );
 

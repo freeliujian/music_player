@@ -38,13 +38,13 @@ pub type ThemeContextProvider = Rc<Theme>;
 #[function_component(ThemeProvider)]
 pub fn theme(props: &ThemeProviderProps) -> Html {
     let theme_context = Rc::new(Theme {
-        color_primary: String::from("#1677ff"),
+        color_primary: String::from(" #1677ff"),
         color_text_base: String::from("#000"),
-        color_bg_base: String::from("#ffffff"),
-        color_warning: String::from("#faad14"),
-        color_success: String::from("#52c41a"),
-        color_info: String::from("#1677ff"),
-        color_error: String::from("	#ff4d4f"),
+        color_bg_base: String::from(" #ffffff"),
+        color_warning: String::from(" #faad14"),
+        color_success: String::from(" #52c41a"),
+        color_info: String::from(" #1677ff"),
+        color_error: String::from(" #ff4d4f"),
         border_radius: String::from("6px"),
         space:String::from("8px"),
         font_family: String::from("-apple-system, BlinkMacSystemFont,sans-serif"),
