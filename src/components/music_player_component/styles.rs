@@ -141,6 +141,7 @@ pub fn styles(theme: &Theme) -> Style {
             color: ${theme.color_info};
             cursor: pointer;
         }
+       
     );
 
     Style::new(styles).unwrap_or_else(|e| {

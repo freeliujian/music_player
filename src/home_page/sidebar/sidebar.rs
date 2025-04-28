@@ -74,7 +74,6 @@ pub fn sider_bar() -> Html {
                         )
                     })
                 }
-
             </div>
         </div>
     )

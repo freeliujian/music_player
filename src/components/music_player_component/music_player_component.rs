@@ -7,6 +7,7 @@ use crate::icons::forward_fast_icon::ForwardIcon;
 use crate::icons::pause_icon::PauseIcon;
 use crate::icons::play_icon::PlayIcon;
 use crate::icons::retweet::RetweetIcon;
+use crate::components::music_player_component::current_play_list::current_play_list::{CurrentPlayListProps, CurrentPlayList};
 use stylist::yew::styled_component;
 use wasm_bindgen::prelude::Closure;
 use wasm_bindgen::JsCast;
@@ -20,12 +21,16 @@ pub struct Props {
     pub class_name: String,
 }
 
-struct MusicListStruct {
-    name: String,
-    author: String,
-    is_share: bool,
-    time: u64,
+#[derive(Debug)]
+pub struct CurrentPlayListVecProps {
+    pub name: String,
+    pub author: String,
+    pub is_share: bool,
+    pub time: u64,
+    pub url: String,
+    pub img: String,
 }
+  
 
 const CURRENTPLAYTITLE: &str = "当前播放";
 
@@ -51,15 +56,42 @@ pub fn music_player_component(props: &Props) -> Html {
     });
 
     let music_list = use_state(|| {
-        vec![MusicListStruct {
-            name: String::from("安河桥"),
-            author: String::from("luojian"),
-            is_share: false,
-            time: 5000,
-        }]
+        vec![
+            CurrentPlayListVecProps {
+                name: String::from("安河桥"),
+                author: String::from("luojian"),
+                is_share: false,
+                time: 5000,
+                url: String::from("public/55 Alstroemeria Records - Bad Apple!! feat. nomico.flac"),
+                img: String::from("public/1.jpg"),
+            },
+            CurrentPlayListVecProps {
+                name: String::from("安河桥"),
+                author: String::from("luojian"),
+                is_share: false,
+                time: 5000,
+                url: String::from("public/55 Alstroemeria Records - Bad Apple!! feat. nomico.flac"),
+                img: String::from("public/1.jpg"),
+            },
+            CurrentPlayListVecProps {
+                name: String::from("安河桥"),
+                author: String::from("luojian"),
+                is_share: false,
+                time: 5000,
+                url: String::from("public/55 Alstroemeria Records - Bad Apple!! feat. nomico.flac"),
+                img: String::from("public/1.jpg"),
+            },
+        ]
     });
-
-    let music_num = 1;
+    let play_message = use_state(|| CurrentPlayListVecProps {
+        name: String::from("bad apple"),
+        author: String::from("fhly"),
+        is_share: false,
+        time: 5000,
+        url: String::from("public/55 Alstroemeria Records - Bad Apple!! feat. nomico.flac"),
+        img: String::from("public/1.jpg"),
+    });
+    let music_num = music_list.len();
 
     let on_seek = {
         let current_time = current_time.clone();
@@ -184,7 +216,6 @@ pub fn music_player_component(props: &Props) -> Html {
                     )
                     .expect("timeupdate status is error");
 
-                // audio.add_event_listener_with_callback("play", listener)
 
                 loaded_metadata_cb.forget();
                 time_updated_cb.forget();
@@ -207,7 +238,10 @@ pub fn music_player_component(props: &Props) -> Html {
 
     let play_main_render = {
         html! {
-            <audio ref={audio_ref} id="myAudio" src="public/55 Alstroemeria Records - Bad Apple!! feat. nomico.flac" onended={on_end_ed}></audio>
+            <audio 
+            ref={audio_ref} 
+            src={play_message.url.clone()} 
+            onended={on_end_ed}/>
         }
     };
 
@@ -237,6 +271,13 @@ pub fn music_player_component(props: &Props) -> Html {
         })
     };
 
+    let remove_music_list_click = {
+        let music_list = music_list.clone();
+        Callback::from(move |_| {
+            music_list.set(Vec::new());
+        })
+    };
+
     let show_music_list_title_render = {
         html! {
             <>
@@ -251,7 +292,7 @@ pub fn music_player_component(props: &Props) -> Html {
                         <span class="save-all">
                         {"收藏全部"}
                         </span>
-                        <span class="clear-list">
+                        <span class="clear-list" onclick={remove_music_list_click}>
                             {"清空列表"}
                         </span>
                     </div>
@@ -260,19 +301,33 @@ pub fn music_player_component(props: &Props) -> Html {
         }
     };
 
-    let show_music_list_content_render = {
-        html! {
-            <div class="music-list-content">
-
-            </div>
-        }
-    };
-
     let show_music_list_render = {
+        
+        let get_current_list_item = {
+            Callback::from(move |value: CurrentPlayListVecProps| {
+                log::info!("{:?}", value);
+            })
+        };
+
         html! {
             <div class="music-list-wrapper">
                 {show_music_list_title_render}
-                {show_music_list_content_render}
+                {
+                    for music_list.iter().map(|item| {
+                        let props = yew::props!(CurrentPlayListProps {
+                            name: item.name.clone(),
+                            is_share:item.is_share,
+                            author:item.author.clone(),
+                            time:item.time,
+                            on_click:get_current_list_item.clone()
+                        });
+                        html!(
+                            <CurrentPlayList
+                                ..props.clone()
+                            />
+                        )
+                    })
+                }
             </div>
         }
     };
