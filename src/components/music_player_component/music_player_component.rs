@@ -21,7 +21,7 @@ pub struct Props {
     pub class_name: String,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct CurrentPlayListVecProps {
     pub name: String,
     pub author: String,
@@ -29,6 +29,7 @@ pub struct CurrentPlayListVecProps {
     pub time: u64,
     pub url: String,
     pub img: String,
+    pub id: i32,
 }
   
 
@@ -62,34 +63,39 @@ pub fn music_player_component(props: &Props) -> Html {
                 author: String::from("luojian"),
                 is_share: false,
                 time: 5000,
-                url: String::from("public/55 Alstroemeria Records - Bad Apple!! feat. nomico.flac"),
-                img: String::from("public/1.jpg"),
+                url: String::from("http://localhost.:1420/public/55 Alstroemeria Records - Bad Apple!! feat. nomico.flac"),
+                img: String::from("http://localhost.:1420/public/1.jpg"),
+                id: 0
             },
             CurrentPlayListVecProps {
                 name: String::from("安河桥"),
                 author: String::from("luojian"),
                 is_share: false,
                 time: 5000,
-                url: String::from("public/55 Alstroemeria Records - Bad Apple!! feat. nomico.flac"),
-                img: String::from("public/1.jpg"),
+                url: String::from("http://localhost.:1420/public/55 Alstroemeria Records - Bad Apple!! feat. nomico.flac"),
+                img: String::from("http://localhost.:1420/public/1.jpg"),
+                id: 1
             },
             CurrentPlayListVecProps {
                 name: String::from("安河桥"),
                 author: String::from("luojian"),
                 is_share: false,
                 time: 5000,
-                url: String::from("public/55 Alstroemeria Records - Bad Apple!! feat. nomico.flac"),
-                img: String::from("public/1.jpg"),
+                url: String::from("http://localhost.:1420/public/55 Alstroemeria Records - Bad Apple!! feat. nomico.flac"),
+                img: String::from("http://localhost.:1420/public/1.jpg"),
+                id: 2
             },
         ]
     });
+    let current_selected_play_message = use_state(|| -1);
     let play_message = use_state(|| CurrentPlayListVecProps {
         name: String::from("bad apple"),
         author: String::from("fhly"),
         is_share: false,
         time: 5000,
-        url: String::from("public/55 Alstroemeria Records - Bad Apple!! feat. nomico.flac"),
-        img: String::from("public/1.jpg"),
+        url: String::from("http://localhost.:1420/public/55 Alstroemeria Records - Bad Apple!! feat. nomico.flac"),
+        img: String::from("http://localhost.:1420/public/1.jpg"),
+        id:0,
     });
     let music_num = music_list.len();
 
@@ -239,7 +245,7 @@ pub fn music_player_component(props: &Props) -> Html {
     let play_main_render = {
         html! {
             <audio 
-            ref={audio_ref} 
+            ref={audio_ref.clone()} 
             src={play_message.url.clone()} 
             onended={on_end_ed}/>
         }
@@ -272,9 +278,11 @@ pub fn music_player_component(props: &Props) -> Html {
     };
 
     let remove_music_list_click = {
-        let music_list = music_list.clone();
-        Callback::from(move |_| {
+        let music_list: UseStateHandle<Vec<CurrentPlayListVecProps>> = music_list.clone();
+        let on_click_play_or_pause = on_click_play_or_pause.clone();
+        Callback::from(move |e| {
             music_list.set(Vec::new());
+            on_click_play_or_pause.emit(e);
         })
     };
 
@@ -301,14 +309,57 @@ pub fn music_player_component(props: &Props) -> Html {
         }
     };
 
-    let show_music_list_render = {
-        
-        let get_current_list_item = {
+    let get_current_list_item = {
+        let play_message = play_message.clone();
+        let switch_pause_play = switch_pause_play.clone();
+        let current_selected = current_selected_play_message.clone();
+        if !*switch_pause_play {
             Callback::from(move |value: CurrentPlayListVecProps| {
-                log::info!("{:?}", value);
+                let audio_ref_node = audio_ref.clone();
+                let value_clone = value.clone();
+                play_message.set(value);
+                current_selected.set(value_clone.id);
+                switch_pause_play.set(true);
+                spawn_local(async move {
+                    if let Some(audio) = audio_ref_node.cast::<HtmlMediaElement>() {
+                        match audio.play() {
+                            Ok(promise) => {
+                                if let Err(e) = JsFuture::from(promise).await {
+                                    log::error!("{:?}", &e);
+                                }
+                            }
+                            Err(e) => {
+                                log::info!("{:?}",&e);
+                            }
+                        }
+                    }
+                });
             })
-        };
+        }else {
+            Callback::from(move |value: CurrentPlayListVecProps| {
+                let switch_pause_play_click = switch_pause_play.clone();
+                let audio_ref_node = audio_ref.clone();
+                let play_message = play_message.clone();
+                let value_clone = value.clone();
+                play_message.set(value);
+                current_selected.set(value_clone.id);
+                spawn_local(async move {
+                    if let Some(audio) = audio_ref_node.cast::<HtmlMediaElement>() {
+                        match audio.pause() {
+                            Ok(_) => {
+                               switch_pause_play_click.set(!*switch_pause_play_click);
+                            }
+                            Err(e) => {
+                                log::error!("{:?}", &e);
+                            }
+                        }
+                    }
+                });
+            })
+        }
+    };
 
+    let show_music_list_render = {
         html! {
             <div class="music-list-wrapper">
                 {show_music_list_title_render}
@@ -319,7 +370,8 @@ pub fn music_player_component(props: &Props) -> Html {
                             is_share:item.is_share,
                             author:item.author.clone(),
                             time:item.time,
-                            on_click:get_current_list_item.clone()
+                            on_click:get_current_list_item.clone(),
+                            url: item.url.clone(),
                         });
                         html!(
                             <CurrentPlayList
@@ -350,10 +402,10 @@ pub fn music_player_component(props: &Props) -> Html {
                 </div>
                 <div class="music-player-play-content">
                      <div class="music-player-play-name">
-                        {"安河桥"}
+                        {play_message.name.clone()}
                     </div>
                     <div class="music-player-play-author">
-                        {"罗键"}
+                        {play_message.author.clone()}
                     </div>
                 </div>
             </div>

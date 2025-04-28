@@ -19,7 +19,9 @@ pub struct CurrentPlayListProps {
   #[prop_or_default]
   pub img: String,
   #[prop_or_default]
-  pub on_click: Callback<CurrentPlayListVecProps>
+  pub on_click: Callback<CurrentPlayListVecProps>,
+  #[prop_or_default]
+  id: i32
 }
 
 #[styled_component(CurrentPlayList)]
@@ -37,6 +39,7 @@ pub fn current_play_list(props: &CurrentPlayListProps) -> Html {
             time: props.time.clone(),
             url: props.url.clone(),
             img: props.img.clone(),
+            id: props.id.clone(),
           } 
         );
       })
