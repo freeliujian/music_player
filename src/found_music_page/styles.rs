@@ -2,7 +2,9 @@ use stylist::{Style,css};
 
 pub fn styles() -> Style {
   let styles = css!(
-    padding:16px 24px;
+    padding: 0px 24px;
+    overflow-y: scroll;
+    height: 100%;
     .title {
       font-size: 20px;
       font-weight: 500;
@@ -16,6 +18,8 @@ pub fn styles() -> Style {
     }
     .song-list {
       display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
     }
   );
   

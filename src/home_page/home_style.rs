@@ -17,15 +17,15 @@ pub fn styles() -> Style {
         }
         .main-content {
           flex: 1;
-           margin-top: ${static_for_styles.header_height};
+          margin-top: ${static_for_styles.header_height};
+          overflow:hidden;
+          width: 100%;
           height: calc(100% ${"\u{0020}"} - ${"\u{0020}"} ${ static_for_styles.header_height}${"\u{0020}"} - ${"\u{0020}"}  ${static_for_styles.player_bar_height });
         }
-
         .sidebar-right {
           width: 300px;
           height: 100%;
         }
-
         .player-bar {
           height: ${static_for_styles.player_bar_height};
           width: 100%;
