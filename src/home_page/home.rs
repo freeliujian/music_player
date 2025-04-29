@@ -6,17 +6,17 @@ use crate::home_page::sidebar::sidebar::Siderbar;
 use crate::router::{home_switch, SubForHomeRoute};
 use crate::components::music_player_component::music_player_component::MusicPlayerComponent;
 
-#[function_component(SubOtherPage)]
-pub fn sub_other_page() -> Html {
+#[function_component(SubPage)]
+fn sub_other_page() -> Html {
     html! {
         <Switch<SubForHomeRoute> render={home_switch} />
     }
 }
 
-#[function_component(FoundMusicPage)]
-pub fn found_music_page() -> Html {
+#[function_component(SecondPageRoot)]
+pub fn second_page_root() -> Html {
     html! {
-        {"111"}
+        {"root"}
     }
 }
 
@@ -28,8 +28,7 @@ pub fn home_page() -> Html {
             <div class="app-container">
                 <Siderbar/>
                 <div class="main-content">
-                    <FoundMusicPage/>
-                    <SubOtherPage/>
+                    <SubPage/>
                 </div>
                 <div class="player-bar">
                     <MusicPlayerComponent/>

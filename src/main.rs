@@ -7,6 +7,7 @@ pub mod components;
 pub mod header;
 mod config_provide;
 pub mod utils;
+mod found_music_page;
 use yew::prelude::*;
 use log::Level;
 use app::App;

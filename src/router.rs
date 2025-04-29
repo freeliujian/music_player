@@ -2,6 +2,7 @@ use yew::prelude::*;
 use yew_router::prelude::*;
 // use crate::app::App;
 use crate::home_page::home::HomePage;
+use crate::found_music_page::found_music_page::FoundMusicPage;
 
 #[derive(Clone, Routable, PartialEq, Debug)]
 pub enum MainRoute {
@@ -20,6 +21,8 @@ pub enum MainRoute {
 
 #[derive(Clone, Routable, PartialEq, Debug)]
 pub enum SubForHomeRoute {
+    #[at("/home/*")]
+    SecondForHome,
     #[at("/home/foundMusic")]
     FoundMusic,
     #[at("/home/creatorOrPlayer")]
@@ -36,8 +39,11 @@ pub enum SubForHomeRoute {
 
 pub fn home_switch(routes: SubForHomeRoute) -> Html {
     match routes {
-        SubForHomeRoute::FoundMusic => html! {
+        SubForHomeRoute::SecondForHome => html! {
             <Redirect<MainRoute> to={MainRoute::HomeRoot}/>
+        },
+        SubForHomeRoute::FoundMusic => html! {
+            <FoundMusicPage/>
         },
         SubForHomeRoute::CreatorOrPlayer => html! {
             <h1>{"creator or player"}</h1>

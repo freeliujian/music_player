@@ -35,7 +35,7 @@ pub fn header_component() -> Html {
         <div class={header_style}>
             <div class="header-left">
                 <div onclick={handle_click} class="log_img" >
-                    <img src="public/yew.png"  alt="logo"/>
+                    <img src="http://localhost.:1420/public/yew.png"  alt="logo"/>
                     <span>{"yyds"}</span>
                 </div>
             </div>
