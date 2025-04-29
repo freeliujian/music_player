@@ -31,9 +31,6 @@ pub struct CurrentPlayListVecProps {
     pub img: String,
     pub id: i32,
 }
-  
-
-const CURRENTPLAYTITLE: &str = "当前播放";
 
 #[styled_component(MusicPlayerComponent)]
 pub fn music_player_component(props: &Props) -> Html {
@@ -41,7 +38,7 @@ pub fn music_player_component(props: &Props) -> Html {
     let classes = styles(&*theme);
     let show_shadow = use_state(|| false);
     let switch_pause_play = use_state(|| false);
-    let show_list = use_state(|| true);
+    let show_list = use_state(|| false);
 
     let audio_ref = use_node_ref();
 
@@ -59,7 +56,7 @@ pub fn music_player_component(props: &Props) -> Html {
     let music_list = use_state(|| {
         vec![
             CurrentPlayListVecProps {
-                name: String::from("安河桥"),
+                name: String::from("bad apple"),
                 author: String::from("luojian"),
                 is_share: false,
                 time: 5000,
@@ -68,35 +65,27 @@ pub fn music_player_component(props: &Props) -> Html {
                 id: 0
             },
             CurrentPlayListVecProps {
-                name: String::from("安河桥"),
-                author: String::from("luojian"),
+                name: String::from("倾城"),
+                author: String::from("许美静"),
                 is_share: false,
                 time: 5000,
-                url: String::from("http://localhost.:1420/public/55 Alstroemeria Records - Bad Apple!! feat. nomico.flac"),
+                url: String::from("http://localhost.:1420/public/许美静 - 倾城.mp3"),
                 img: String::from("http://localhost.:1420/public/1.jpg"),
                 id: 1
             },
             CurrentPlayListVecProps {
-                name: String::from("安河桥"),
-                author: String::from("luojian"),
+                name: String::from("张卫健"),
+                author: String::from("天外有天"),
                 is_share: false,
                 time: 5000,
-                url: String::from("http://localhost.:1420/public/55 Alstroemeria Records - Bad Apple!! feat. nomico.flac"),
+                url: String::from("http://localhost.:1420/public/张卫健 - 天外有天.mp3"),
                 img: String::from("http://localhost.:1420/public/1.jpg"),
                 id: 2
             },
         ]
     });
-    let current_selected_play_message = use_state(|| -1);
-    let play_message = use_state(|| CurrentPlayListVecProps {
-        name: String::from("bad apple"),
-        author: String::from("fhly"),
-        is_share: false,
-        time: 5000,
-        url: String::from("http://localhost.:1420/public/55 Alstroemeria Records - Bad Apple!! feat. nomico.flac"),
-        img: String::from("http://localhost.:1420/public/1.jpg"),
-        id:0,
-    });
+    let current_selected_play_message = use_state(|| 0);
+    let play_message = use_state(|| music_list[0].clone());
     let music_num = music_list.len();
 
     let on_seek = {
@@ -229,27 +218,6 @@ pub fn music_player_component(props: &Props) -> Html {
         });
     }
 
-    let on_end_ed = {
-        let audio_ref_node = audio_ref.clone();
-        let audio_current_time = current_time.clone();
-        let show_play = switch_pause_play.clone();
-        Callback::from(move |_| {
-            if let Some(audio) = audio_ref_node.cast::<HtmlMediaElement>() {
-                audio.set_current_time(0.0);
-                audio_current_time.set(0);
-                show_play.set(false);
-            }
-        })
-    };
-
-    let play_main_render = {
-        html! {
-            <audio 
-            ref={audio_ref.clone()} 
-            src={play_message.url.clone()} 
-            onended={on_end_ed}/>
-        }
-    };
 
     let play_or_pause_render = {
         html! {
@@ -290,7 +258,7 @@ pub fn music_player_component(props: &Props) -> Html {
         html! {
             <>
                 <div class="music-list-title">
-                {CURRENTPLAYTITLE}
+                {"当前播放"}
                 </div>
                 <div class="music-list-subtitle">
                     <span class="total-number">
@@ -313,50 +281,36 @@ pub fn music_player_component(props: &Props) -> Html {
         let play_message = play_message.clone();
         let switch_pause_play = switch_pause_play.clone();
         let current_selected = current_selected_play_message.clone();
-        if !*switch_pause_play {
-            Callback::from(move |value: CurrentPlayListVecProps| {
-                let audio_ref_node = audio_ref.clone();
-                let value_clone = value.clone();
-                play_message.set(value);
-                current_selected.set(value_clone.id);
-                switch_pause_play.set(true);
-                spawn_local(async move {
-                    if let Some(audio) = audio_ref_node.cast::<HtmlMediaElement>() {
-                        match audio.play() {
-                            Ok(promise) => {
-                                if let Err(e) = JsFuture::from(promise).await {
-                                    log::error!("{:?}", &e);
-                                }
-                            }
-                            Err(e) => {
-                                log::info!("{:?}",&e);
-                            }
-                        }
-                    }
-                });
-            })
-        }else {
-            Callback::from(move |value: CurrentPlayListVecProps| {
-                let switch_pause_play_click = switch_pause_play.clone();
-                let audio_ref_node = audio_ref.clone();
-                let play_message = play_message.clone();
-                let value_clone = value.clone();
-                play_message.set(value);
-                current_selected.set(value_clone.id);
-                spawn_local(async move {
-                    if let Some(audio) = audio_ref_node.cast::<HtmlMediaElement>() {
-                        match audio.pause() {
-                            Ok(_) => {
-                               switch_pause_play_click.set(!*switch_pause_play_click);
-                            }
-                            Err(e) => {
+        let current_play_index = current_selected_play_message.clone();
+        let music_list = music_list.clone();
+        let audio_ref_node = audio_ref.clone();
+        Callback::from(move |value: CurrentPlayListVecProps| {
+            let audio_ref_node = audio_ref_node.clone();
+            let value_clone = value.clone();
+            play_message.set(value.clone());
+            current_selected.set(value_clone.id);
+            switch_pause_play.set(true);
+            
+            // 更新当前播放索引
+            if let Some(index) = music_list.iter().position(|x| x.id == value.id) {
+                current_play_index.set(index as i32);
+            }
+            
+            spawn_local(async move {
+                if let Some(audio) = audio_ref_node.cast::<HtmlMediaElement>() {
+                    match audio.play() {
+                        Ok(promise) => {
+                            if let Err(e) = JsFuture::from(promise).await {
                                 log::error!("{:?}", &e);
                             }
                         }
+                        Err(e) => {
+                            log::info!("{:?}",&e);
+                        }
                     }
-                });
-            })
-        }
+                }
+            });
+        })
     };
 
     let show_music_list_render = {
@@ -383,6 +337,57 @@ pub fn music_player_component(props: &Props) -> Html {
             </div>
         }
     };
+
+    let on_previous = {
+        let music_list = music_list.clone();
+        let current_play_index = current_selected_play_message.clone();
+        let get_current_list_item = get_current_list_item.clone();
+        Callback::from(move |_:MouseEvent| {
+            if music_list.len() == 0 {
+                return;
+            }
+            let new_index:i32 = if *current_play_index == 0 {
+                music_list.len() as i32 - 1
+            } else {
+                *current_play_index - 1
+            };
+            current_play_index.set(new_index);
+            let song = music_list[new_index as usize].clone();
+            get_current_list_item.emit(song);
+        })
+    };
+
+    let on_next = {
+        let music_list = music_list.clone();
+        let current_play_index = current_selected_play_message.clone();
+        let get_current_list_item = get_current_list_item.clone();
+        Callback::from(move |_| {
+            if music_list.len() == 0 {
+                return;
+            }
+            let new_index = (*current_play_index + 1) % music_list.len() as i32;
+            current_play_index.set(new_index);
+            let song = music_list[new_index as usize].clone();
+            get_current_list_item.emit(song);
+        })
+    };
+
+    let on_end_ed = {
+        let on_next = on_next.clone();
+        Callback::from(move |e| {
+            on_next.emit(MouseEvent::new("click").unwrap());
+        })
+    };
+
+    let play_main_render = {
+        html! {
+            <audio 
+            ref={audio_ref.clone()} 
+            src={play_message.url.clone()} 
+            onended={on_end_ed}/>
+        }
+    };
+
 
     html! {
         <div
@@ -414,7 +419,7 @@ pub fn music_player_component(props: &Props) -> Html {
                     <div class={classes!("retweet","music_player_btn")}>
                         <RetweetIcon/>
                     </div>
-                    <div class={classes!("previous","music_player_btn")}>
+                    <div onclick={on_previous} class={classes!("previous","music_player_btn")}>
                         <BackwardIcon/>
                     </div>
                     <div
@@ -423,7 +428,7 @@ pub fn music_player_component(props: &Props) -> Html {
                     >
                         {play_or_pause_render}
                     </div>
-                    <div class={classes!("next","music_player_btn")}>
+                    <div onclick={on_next} class={classes!("next","music_player_btn")}>
                         <ForwardIcon/>
                     </div>
                     <div class={classes!("word","music_player_btn")}>

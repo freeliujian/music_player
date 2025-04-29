@@ -6,7 +6,7 @@ pub mod icons;
 pub mod components;
 pub mod header;
 mod config_provide;
-
+pub mod utils;
 use yew::prelude::*;
 use log::Level;
 use app::App;

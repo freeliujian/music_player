@@ -6,6 +6,7 @@ use gloo::utils::{document, window};
 use crate::components::player::styles::styles;
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::JsCast;
+use crate::utils::utils::format_time;
 
 #[derive(Properties, PartialEq)]
 pub struct ProgressBarProps {
@@ -26,13 +27,6 @@ pub fn progress_bar(props: &ProgressBarProps) -> Html {
     let is_dragging = use_state(|| false);
     // 进度条容器的引用
     let progress_container = use_node_ref();
-
-    // 格式化时间为 MM:SS
-    fn format_time(seconds: u64) -> String {
-        let minutes = seconds / 60;
-        let seconds = seconds % 60;
-        format!("{:02}:{:02}", minutes, seconds)
-    }
 
     // 计算进度百分比
     let progress_percent = if *duration > 0 {

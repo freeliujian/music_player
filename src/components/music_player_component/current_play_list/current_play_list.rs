@@ -3,6 +3,7 @@ use yew::prelude::*;
 use crate::components::music_player_component::current_play_list::styles::styles;
 use crate::components::music_player_component::music_player_component::CurrentPlayListVecProps;
 use crate::config_provide::context::ThemeContextProvider;
+use crate::utils::utils::format_time;
 
 #[derive(PartialEq, Properties, Clone, Debug)]
 pub struct CurrentPlayListProps {
@@ -55,7 +56,9 @@ pub fn current_play_list(props: &CurrentPlayListProps) -> Html {
               {props.author.clone()}
           </div>
           <div class="time">
-              {props.time.clone()}
+              {
+                format_time(props.time.clone())
+              }
           </div>
         </div>
       </div>
