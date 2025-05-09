@@ -1,6 +1,6 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 pub mod customs_handle;
-use tauri::Manager;
+use tauri::{LogicalSize, Manager};
 use tauri_plugin_log::{Target, TargetKind};
 use customs_handle::customs_handle::{control_window, greet};
 
@@ -9,6 +9,8 @@ pub fn run() {
     tauri::Builder::default()
         .setup(|app| {
             let window = app.get_webview_window("main").unwrap();
+            window.set_min_size(Some(LogicalSize::new(1020, 670)))?;
+            window.set_size(LogicalSize::new(1020, 670))?;
             window.set_decorations(false)?;
             Ok(())
         })

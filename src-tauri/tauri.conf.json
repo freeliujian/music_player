@@ -14,8 +14,8 @@
     "windows": [
       {
         "title": "music_player",
-        "width": 800,
-        "height": 600,
+        "width": 1020,
+        "height": 670,
         "decorations": false
       }
     ],

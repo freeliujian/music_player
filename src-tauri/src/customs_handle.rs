@@ -10,8 +10,8 @@ pub mod customs_handle {
             },
             ControlWindowType::Normal => {
                 window.set_size(tauri::Size::Logical(tauri::LogicalSize {
-                    width: 800.0,
-                    height: 600.0,
+                    width: 1020.0,
+                    height: 670.0,
                 })).map_err(|e| e.to_string())
             }
             ControlWindowType::Close => {
