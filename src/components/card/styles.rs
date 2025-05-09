@@ -7,21 +7,29 @@ pub fn styles() -> Style {
     position: relative;
     cursor: pointer;
     list-style: none;
-    :hover .cover  {
-      display: block;
+    .wrapper:hover div.cover {
+      opacity: 1;
     }
     img {
       width: 100%;
     }
     .cover {
       width: 100%;
-      height: 100%;
+      height: 40px;
+      padding: 8px 4px;
+      color: #fff;
+      font-size: 12px;
       background: rgba(0,0,0,0.5);
       position: absolute;
       left: 0;
       top: 0;
-      display:none;
-      animation: all 0.5s;
+      opacity: 0;
+      transition: all 0.5s;
+      box-sizing: border-box;
+    }
+    .card_text {
+      margin: 8px 0 3px;
+      font-size: 14px;
     }
     
   );

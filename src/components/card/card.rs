@@ -11,6 +11,8 @@ pub struct CardProps {
   pub img_url: String,
   #[prop_or_default]
   pub text: String,
+  #[prop_or_default]
+  pub extra_text: String,
 }
 
 #[function_component(Card)]
@@ -27,11 +29,13 @@ pub fn card(props: &CardProps) -> Html {
     
     html! {
         <li class={classes} onclick={handle_click}>
-          <div>
+          <div class="wrapper">
             <img src={props.img_url.clone()} />
-            <div class="cover" />
+            <div class="cover" >
+              {props.extra_text.clone()}
+            </div>
           </div>
-          <p>
+          <p class={"card_text"}>
             {props.text.clone()}
           </p>
         </li>
