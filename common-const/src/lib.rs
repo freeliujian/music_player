@@ -1,5 +1,6 @@
 pub mod window_control_common_const {
-    #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+    use serde::{Serialize, Deserialize};
+    #[derive(Debug, Clone, Serialize, Deserialize)]
     #[serde(rename_all = "camelCase")]
     pub enum ControlWindowType {
         Close,

@@ -1,6 +1,7 @@
 use yew::prelude::*;
 use crate::found_music_page::styles::styles;
 use crate::components::card::card::{Card, CardProps};
+use crate::components::top_list_card::top_list_card::TopListCard;
 
 
 #[function_component(FoundMusicPage)]
@@ -134,11 +135,61 @@ pub fn found_music_page() -> Html {
 
     let top_list_render = {
         html!(
-            <>
-            <div class={"top_card"}>
-                {"111"}
-            </div>
-            </>
+            <ul class={"top_list_wrapper"}>
+                <TopListCard 
+                    title={String::from("热歌榜")}
+                    color={String::from("#d77a94")}
+                    content= {
+                        html!(
+                            <div>
+                               <p>
+                                 {"1.格桑花"}
+                               </p>
+                            </div>
+                        )
+                    }
+                />
+                <TopListCard 
+                    title={String::from("新歌榜")}
+                    color={String::from("#6d96b1")}
+                      content= {
+                        html!(
+                            <div>
+                               <p>
+                                 {"1.格桑花"}
+                               </p>
+                            </div>
+                        )
+                    }
+                />
+                <TopListCard 
+                    title={String::from("流行榜")}
+                    color={String::from("#6cbdb6")}
+                      content= {
+                        html!(
+                            <div>
+                               <p>
+                                 {"1.格桑花"}
+                               </p>
+                            </div>
+                        )
+                    }
+                />
+                <TopListCard 
+                    title={String::from("国外巅峰榜")}
+                    color={String::from("#538f94")}
+                      content= {
+                        html!(
+                            <div>
+                               <p>
+                                 {"1.格桑花"}
+                               </p>
+                            </div>
+                        )
+                    }
+                />
+             
+            </ul>
         )
     };
 

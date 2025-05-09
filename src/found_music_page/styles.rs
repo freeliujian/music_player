@@ -14,12 +14,18 @@ pub fn styles() -> Style {
     .carousel {
       width: 100%;
       height: 320px;
-      background: red;
+      background: #31c27c;
     }
     .song-list {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
+    }
+    .top_list_wrapper{
+      width: 100%;
+      display: flex;
+      gap: 32px;
+      flex-direction: row;
     }
   );
   
