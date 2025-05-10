@@ -1,7 +1,16 @@
+use std::vec;
+
 use yew::prelude::*;
 use crate::found_music_page::styles::styles;
 use crate::components::card::card::{Card, CardProps};
-use crate::components::top_list_card::top_list_card::TopListCard;
+use crate::components::top_list_card::top_list_card::{TopListCard, TopListCardProps};
+
+#[derive(Clone)]
+struct  TopListProps {
+    pub color: String,
+    pub title: String,
+    pub content: Html,
+}
 
 
 #[function_component(FoundMusicPage)]
@@ -89,6 +98,64 @@ pub fn found_music_page() -> Html {
         ]
     );
 
+        let top_list_props = use_state(|| {
+        vec![
+            TopListProps {
+                title: String::from("热歌榜"),
+                color: String::from("#d77a94"),
+                content: {
+                    html!(
+                        <div>
+                            <p>
+                                {"1.格桑花"}
+                            </p>
+                        </div>
+                    )
+                }
+            },
+            TopListProps {
+                title: String::from("热歌榜"),
+                color: String::from("#d77a94"),
+                content: {
+                    html!(
+                        <div>
+                            <p>
+                                {"1.格桑花"}
+                            </p>
+                        </div>
+                    )
+                }
+            },
+            TopListProps {
+                title: String::from("热歌榜"),
+                color: String::from("#d77a94"),
+                content: {
+                    html!(
+                        <div>
+                            <p>
+                                {"1.格桑花"}
+                            </p>
+                        </div>
+                    )
+                }
+            },
+            TopListProps {
+                title: String::from("热歌榜"),
+                color: String::from("#d77a94"),
+                content: {
+                    html!(
+                        <div>
+                            <p>
+                                {"1.格桑花"}
+                            </p>
+                        </div>
+                    )
+                }
+            },
+        ]
+    });
+
+
     let recommended_playlist_card_render = {
         let music_order_list = music_order_list.clone();
         html!{
@@ -133,61 +200,28 @@ pub fn found_music_page() -> Html {
         )
     };
 
+
     let top_list_render = {
+        let top_list_props = top_list_props.clone();
         html!(
             <ul class={"top_list_wrapper"}>
-                <TopListCard 
-                    title={String::from("热歌榜")}
-                    color={String::from("#d77a94")}
-                    content= {
+                {
+                    for <Vec<TopListProps> as Clone>::clone(&top_list_props).into_iter().map(|item| {
+                        let on_click = Callback::from(move |value: String| {
+                            log::info!("clicked top list {}", value);
+                        });
                         html!(
-                            <div>
-                               <p>
-                                 {"1.格桑花"}
-                               </p>
-                            </div>
+                            <TopListCard 
+                                title={item.title.clone()}
+                                color={item.color.clone()}
+                                content= {
+                                item.content.clone()
+                                }
+                                on_click={on_click}
+                            />
                         )
-                    }
-                />
-                <TopListCard 
-                    title={String::from("新歌榜")}
-                    color={String::from("#6d96b1")}
-                      content= {
-                        html!(
-                            <div>
-                               <p>
-                                 {"1.格桑花"}
-                               </p>
-                            </div>
-                        )
-                    }
-                />
-                <TopListCard 
-                    title={String::from("流行榜")}
-                    color={String::from("#6cbdb6")}
-                      content= {
-                        html!(
-                            <div>
-                               <p>
-                                 {"1.格桑花"}
-                               </p>
-                            </div>
-                        )
-                    }
-                />
-                <TopListCard 
-                    title={String::from("国外巅峰榜")}
-                    color={String::from("#538f94")}
-                      content= {
-                        html!(
-                            <div>
-                               <p>
-                                 {"1.格桑花"}
-                               </p>
-                            </div>
-                        )
-                    }
-                />
+                    })
+                }
              
             </ul>
         )

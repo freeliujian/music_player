@@ -17,18 +17,29 @@ pub struct TopListCardProps {
 pub fn top_list_card(props: &TopListCardProps) -> Html {
     let classes = styles();
     
-    let style_color = || {
-        if props.color.is_empty() {
-            String::new() 
+    let style = use_memo(props.color.clone(), |color| {
+        if color.is_empty() {
+            String::new()
         } else {
-            format!("background: {}", props.color)
+            format!("background: {color}")
         }
+    });
+
+
+    let hand_click = {
+      let cb = props.on_click.clone();
+      let title = props.title.clone();
+      Callback::from(move |_:MouseEvent| {
+        log::info!("clicked top list {}", title.clone());
+        cb.emit(title.clone()); 
+      })
     };
  
     html! {
         <li 
-          style={style_color()}
+          style={(*style).clone()}
           class={classes!(classes)}
+          onclick={hand_click}
         >
           <h2 class={"title"}>
             {props.title.clone()}
